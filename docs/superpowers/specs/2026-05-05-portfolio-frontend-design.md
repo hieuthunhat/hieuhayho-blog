@@ -1,7 +1,7 @@
 # Portfolio frontend — design
 
 **Date:** 2026-05-05
-**Status:** in progress (one open question — see end)
+**Status:** approved — ready for implementation plan
 **Scope:** Frontend-first phase of HieuBlog. Backend (Koa + Firebase) follows in a separate spec.
 
 ## 1. Context
@@ -245,15 +245,12 @@ Each method throws `ApiError` on failure.
 - Dark mode (mentioned in SPEC as optional; defer).
 - Project detail pages (homepage cards remain non-clickable).
 - Real Koa backend, Firebase wiring, deployment (separate phase).
+- Admin UI (no `/admin` routes, no auth context). Decided: backend will gate write endpoints with a hardcoded admin credential when Koa+Firebase land in a later phase. No frontend changes needed now.
 
-## 8. Open question (deferred — needs your call before next phase)
+## 8. Backend phase preview (informational, not in scope)
 
-**Admin scope.** Backend will use Firebase, with a hardcoded admin account for now. Three options for the frontend phase:
+Recorded so the next phase has continuity, not because anything below is built now.
 
-1. **Heads-up only.** Don't build any admin UI now; the current spec already accommodates this — when Koa lands, admin-only endpoints (post create/edit/delete, view contact submissions) get gated by the hardcoded credentials. No frontend changes needed in this phase.
-2. **Add admin UI now.** Build `/admin/login` + `/admin` dashboard with post CRUD (create/edit/delete) and possibly a contact-submissions view. Mock the auth + mutation API now, swap to real Koa+Firebase later. Adds ~3 routes and a small auth context.
-3. **Login gate only.** Add `/admin/login` + stub `/admin` page that renders "coming soon" once authenticated. Wires the auth shape so CRUD can land later without rework.
-
-If option 2: confirm CRUD scope (create + edit + delete?) and whether the admin should also see contact submissions.
-
-This decision is the only thing blocking sign-off on this spec.
+- **Database:** Firebase (likely Firestore for posts and contact submissions).
+- **Admin auth:** hardcoded credentials in env/config — single admin (Hieu). No user signup, no roles. Used to gate writes on `/api/posts`, `/api/posts/:slug` (PUT/DELETE), and reads on contact submissions.
+- **Open for next phase, not this one:** whether admin UI lands as a small frontend dashboard or as direct REST/Firebase-console interaction. Reopen the question when starting the backend spec.
