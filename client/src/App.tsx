@@ -1,10 +1,26 @@
-import { Button } from '@/components/ui/button';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Nav from '@/components/layout/nav';
+import Footer from '@/components/layout/footer';
+import Home from '@/routes/home';
+import Blogs from '@/routes/blogs';
+import BlogDetail from '@/routes/blog-detail';
+import Contact from '@/routes/contact';
+import NotFound from '@/routes/not-found';
 
 export default function App() {
   return (
-    <div className="mx-auto max-w-5xl p-8">
-      <h1 className="text-2xl font-medium text-blue-950">hieu.dev</h1>
-      <Button className="mt-4 bg-blue-700 hover:bg-blue-800">test button</Button>
-    </div>
+    <BrowserRouter>
+      <Nav />
+      <main className="mx-auto max-w-5xl px-8 pb-16">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:slug" element={<BlogDetail />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+    </BrowserRouter>
   );
 }
