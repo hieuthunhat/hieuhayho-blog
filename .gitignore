@@ -4,3 +4,6 @@ node_modules
 server/.env
 server/.env.local
 server/dist
+
+# emulator logs
+*.log

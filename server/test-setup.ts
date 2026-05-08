@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach } from 'vitest';
+import { beforeAll, beforeEach } from 'vitest';
 
 process.env.NODE_ENV = 'test';
 process.env.PORT = '0';
@@ -29,13 +29,9 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  // Clear all data between tests via the emulator's reset endpoint.
-  await fetch(
-    `http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/${process.env.GOOGLE_CLOUD_PROJECT}/databases/(default)/documents`,
-    { method: 'DELETE' }
-  );
-});
-
-afterAll(async () => {
-  // Nothing — emulator stays up for the next run.
+  const url = `http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/${process.env.GOOGLE_CLOUD_PROJECT}/databases/(default)/documents`;
+  const res = await fetch(url, { method: 'DELETE' });
+  if (!res.ok) {
+    throw new Error(`Firestore reset failed: ${res.status} ${res.statusText}`);
+  }
 });
