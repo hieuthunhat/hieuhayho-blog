@@ -5,7 +5,8 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     setupFiles: ['./test-setup.ts'],
-    pool: 'forks',
-    forks: { singleFork: true },
+    maxWorkers: 1,
+    isolate: false,
   },
 });
+
