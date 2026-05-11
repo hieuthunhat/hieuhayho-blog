@@ -1,33 +1,47 @@
-import type { ContactPayload, Post, PostSummary, ApiError } from '@/lib/types';
+import type { ContactPayload, Post, PostSummary, ApiError, PostStatus } from '@/lib/types';
 import { seedPosts } from '@/content/seed-posts';
 
 const delay = (ms = 300) => new Promise((r) => setTimeout(r, ms));
 
-const toSummary = (post: Post): PostSummary => ({
-  slug: post.slug,
-  title: post.title,
-  excerpt: post.excerpt,
-  publishedAt: post.publishedAt,
-  readingMinutes: post.readingMinutes,
-  tags: post.tags,
-});
+function fillDefaults(p: {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  publishedAt: string;
+  readingMinutes: number;
+  tags: string[];
+}): Post {
+  return {
+    ...p,
+    publishedAt: p.publishedAt,
+    status: 'published' as PostStatus,
+    createdAt: p.publishedAt,
+    updatedAt: p.publishedAt,
+    coverImageUrl: null,
+  };
+}
+
+const toSummary = (post: Post): PostSummary => {
+  const { content: _content, ...rest } = post;
+  return rest;
+};
 
 export const mockApi = {
   posts: {
     async list(): Promise<PostSummary[]> {
       await delay();
       return [...seedPosts]
-        .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
+        .map(fillDefaults)
+        .sort((a, b) => ((a.publishedAt ?? '') < (b.publishedAt ?? '') ? 1 : -1))
         .map(toSummary);
     },
-
     async get(slug: string): Promise<Post | null> {
       await delay();
       const found = seedPosts.find((p) => p.slug === slug);
-      return found ?? null;
+      return found ? fillDefaults(found) : null;
     },
   },
-
   contact: {
     async send(payload: ContactPayload): Promise<{ ok: true }> {
       await delay();
