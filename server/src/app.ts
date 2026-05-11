@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/error-handler.js';
 import authRouter from './routes/auth.js';
 import postsRouter from './routes/posts.js';
 import uploadsRouter from './routes/uploads.js';
+import contactRouter from './routes/contact.js';
 
 export function buildApp(): Koa {
   const app = new Koa();
@@ -29,6 +30,7 @@ export function buildApp(): Koa {
   app.use(authRouter.routes()).use(authRouter.allowedMethods());
   app.use(postsRouter.routes()).use(postsRouter.allowedMethods());
   app.use(uploadsRouter.routes()).use(uploadsRouter.allowedMethods());
+  app.use(contactRouter.routes()).use(contactRouter.allowedMethods());
 
   return app;
 }
