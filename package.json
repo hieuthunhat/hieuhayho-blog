@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "private": true,
-  "workspaces": ["client", "server"],
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
+    "dev": "concurrently -n client,server -c blue,magenta \"npm:dev:client\" \"npm:dev:server\"",
     "dev:client": "npm run dev --workspace=client",
     "dev:server": "npm run dev --workspace=server",
+    "test": "npm run test:server && npm run test:client",
     "test:client": "npm run test:run --workspace=client",
     "test:server": "npm run test:run --workspace=server",
     "build:client": "npm run build --workspace=client",
@@ -16,5 +21,8 @@
   },
   "overrides": {
     "generator-function": "1.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
