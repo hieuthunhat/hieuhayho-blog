@@ -4,6 +4,7 @@ import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import { errorHandler } from './middleware/error-handler.js';
 import authRouter from './routes/auth.js';
+import postsRouter from './routes/posts.js';
 
 export function buildApp(): Koa {
   const app = new Koa();
@@ -25,6 +26,7 @@ export function buildApp(): Koa {
 
   app.use(root.routes()).use(root.allowedMethods());
   app.use(authRouter.routes()).use(authRouter.allowedMethods());
+  app.use(postsRouter.routes()).use(postsRouter.allowedMethods());
 
   return app;
 }
