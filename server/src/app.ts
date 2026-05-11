@@ -2,12 +2,14 @@ import Koa from 'koa';
 import Router from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
+import { errorHandler } from './middleware/error-handler.js';
+import authRouter from './routes/auth.js';
 
 export function buildApp(): Koa {
   const app = new Koa();
-  // Trust the keys for cookie signing in dev (we use unsigned cookies; this is just to silence Koa's warning).
   app.keys = [process.env.JWT_SECRET ?? 'dev-key'];
 
+  app.use(errorHandler);
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
@@ -22,6 +24,7 @@ export function buildApp(): Koa {
   });
 
   app.use(root.routes()).use(root.allowedMethods());
+  app.use(authRouter.routes()).use(authRouter.allowedMethods());
 
   return app;
 }
