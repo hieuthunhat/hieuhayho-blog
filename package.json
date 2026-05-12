@@ -20,7 +20,9 @@
     "seed": "npm run seed --workspace=server"
   },
   "overrides": {
-    "generator-function": "1.0.0"
+    "generator-function": "1.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
