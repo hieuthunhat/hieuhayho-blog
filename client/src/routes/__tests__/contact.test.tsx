@@ -1,7 +1,17 @@
+import { vi, beforeEach } from 'vitest';
+
+vi.mock('@/lib/api', () => ({
+  api: {
+    posts: { list: vi.fn(), get: vi.fn() },
+    contact: { send: vi.fn() },
+  },
+}));
+
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Contact from '@/routes/contact';
+import { api } from '@/lib/api';
 
 function renderContact() {
   return render(
@@ -10,6 +20,11 @@ function renderContact() {
     </MemoryRouter>
   );
 }
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  (api.contact.send as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true });
+});
 
 describe('<Contact />', () => {
   it('renders the form fields', () => {

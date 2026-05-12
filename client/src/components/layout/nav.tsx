@@ -1,14 +1,20 @@
 import { Link, NavLink } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/auth-provider';
 
-const links = [
-  { to: '/#work', label: 'work', match: '/' as const },
-  { to: '/blogs', label: 'writing', match: '/blogs' as const },
-  { to: '/contact', label: 'contact', match: '/contact' as const },
+const baseLinks = [
+  { to: '/#work', label: 'work' },
+  { to: '/blogs', label: 'writing' },
+  { to: '/contact', label: 'contact' },
 ];
 
 export default function Nav() {
+  const { isAdmin } = useAuth();
+  const links = isAdmin
+    ? [...baseLinks, { to: '/admin', label: 'admin' }]
+    : baseLinks;
+
   return (
     <nav className="mx-auto mb-12 flex max-w-5xl items-center justify-between px-8 pt-8">
       <Link to="/" className="flex items-center gap-2.5">
@@ -26,9 +32,7 @@ export default function Nav() {
           if (isAnchor) {
             return (
               <li key={l.label}>
-                <a href={l.to} className="hover:underline">
-                  {l.label}
-                </a>
+                <a href={l.to} className="hover:underline">{l.label}</a>
               </li>
             );
           }
@@ -36,9 +40,7 @@ export default function Nav() {
             <li key={l.label}>
               <NavLink
                 to={l.to}
-                className={({ isActive }) =>
-                  cn('hover:underline', isActive && 'underline')
-                }
+                className={({ isActive }) => cn('hover:underline', isActive && 'underline')}
               >
                 {l.label}
               </NavLink>

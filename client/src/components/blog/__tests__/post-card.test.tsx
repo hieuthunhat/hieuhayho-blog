@@ -10,6 +10,10 @@ const sample: PostSummary = {
   publishedAt: '2026-04-01',
   readingMinutes: 3,
   tags: ['intro', 'meta'],
+  status: 'published',
+  createdAt: '2026-04-01T00:00:00Z',
+  updatedAt: '2026-04-01T00:00:00Z',
+  coverImageUrl: null,
 };
 
 function renderCard() {

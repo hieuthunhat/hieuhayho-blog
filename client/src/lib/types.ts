@@ -1,14 +1,30 @@
+export type PostStatus = 'draft' | 'published';
+
 export type Post = {
   slug: string;
   title: string;
   excerpt: string;
   content: string;
-  publishedAt: string;
+  publishedAt: string | null;
   readingMinutes: number;
   tags: string[];
+  status: PostStatus;
+  createdAt: string;
+  updatedAt: string;
+  coverImageUrl: string | null;
 };
 
 export type PostSummary = Omit<Post, 'content'>;
+
+export type PostInput = {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  tags: string[];
+  status: PostStatus;
+  coverImageUrl: string | null;
+};
 
 export type ContactPayload = {
   name: string;
@@ -19,6 +35,11 @@ export type ContactPayload = {
 export type ApiError = {
   message: string;
   status: number;
+};
+
+export type UploadResponse = {
+  url: string;
+  publicId: string;
 };
 
 export type Project = {
