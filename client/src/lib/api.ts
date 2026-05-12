@@ -5,11 +5,14 @@ import type {
   PostSummary,
   UploadResponse,
 } from '@/lib/types';
-import { mockApi } from '@/lib/mock-api';
 
-const BASE = import.meta.env.VITE_API_BASE?.trim();
+const BASE = import.meta.env.VITE_API_BASE?.trim() ?? '';
 
-const usingMock = !BASE;
+if (!BASE) {
+  // Surface this loudly during development so we never accidentally hit the same-origin path.
+  // eslint-disable-next-line no-console
+  console.warn('VITE_API_BASE is not set; API calls will go to same origin.');
+}
 
 async function http<T>(path: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = {
@@ -27,12 +30,11 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
     const body = await res.json().catch(() => ({ message: res.statusText }));
     throw { message: body.message ?? 'Request failed', status: res.status };
   }
-  // 204-like responses
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }
 
-const realApi = {
+export const api = {
   posts: {
     list: () => http<PostSummary[]>('/api/posts'),
     get: async (slug: string): Promise<Post | null> => {
@@ -105,43 +107,3 @@ const realApi = {
     },
   },
 };
-
-// While the mock is still in-tree, fall back for the public surface only.
-// Auth + admin on the mock are stubs that always reject — log in via the real backend.
-type AuthApi = typeof realApi.auth;
-type AdminApi = typeof realApi.admin;
-
-const mockAuth: AuthApi = {
-  login: async () => {
-    throw { message: 'Mock backend has no auth', status: 501 };
-  },
-  me: async () => ({ admin: false }),
-  logout: async () => ({ ok: true as const }),
-};
-
-const mockAdmin: AdminApi = {
-  posts: {
-    list: async () => {
-      throw { message: 'Mock backend has no admin', status: 501 };
-    },
-    get: async () => null,
-    create: async () => {
-      throw { message: 'Mock backend has no admin', status: 501 };
-    },
-    update: async () => {
-      throw { message: 'Mock backend has no admin', status: 501 };
-    },
-    delete: async () => {
-      throw { message: 'Mock backend has no admin', status: 501 };
-    },
-  },
-  uploads: {
-    create: async () => {
-      throw { message: 'Mock backend has no admin', status: 501 };
-    },
-  },
-};
-
-export const api = usingMock
-  ? { ...mockApi, auth: mockAuth, admin: mockAdmin }
-  : realApi;

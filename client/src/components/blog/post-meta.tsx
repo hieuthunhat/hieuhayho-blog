@@ -10,7 +10,7 @@ const fmtDate = (iso: string) =>
 export function PostMeta({ post }: { post: Pick<PostSummary, 'publishedAt' | 'readingMinutes'> }) {
   return (
     <p className="text-xs text-muted-foreground">
-      {fmtDate(post.publishedAt)} · {post.readingMinutes} min read
+      {post.publishedAt ? fmtDate(post.publishedAt) : 'Unpublished'} · {post.readingMinutes} min read
     </p>
   );
 }
