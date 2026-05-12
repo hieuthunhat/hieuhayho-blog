@@ -1,12 +1,20 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { AuthProvider } from '@/lib/auth-provider';
 import Nav from '@/components/layout/nav';
+import { vi } from 'vitest';
+
+vi.mock('@/lib/api', () => ({
+  api: { auth: { me: vi.fn().mockResolvedValue({ admin: false }) } },
+}));
 
 function renderNav(initialEntries = ['/']) {
   return render(
-    <MemoryRouter initialEntries={initialEntries}>
-      <Nav />
-    </MemoryRouter>
+    <AuthProvider>
+      <MemoryRouter initialEntries={initialEntries}>
+        <Nav />
+      </MemoryRouter>
+    </AuthProvider>
   );
 }
 
