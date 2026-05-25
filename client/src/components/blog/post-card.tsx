@@ -7,7 +7,15 @@ import type { PostSummary } from '@/lib/types';
 export default function PostCard({ post }: { post: PostSummary }) {
   return (
     <Link to={`/blogs/${post.slug}`} className="block">
-      <Card className="cursor-pointer transition-colors hover:border-blue-300">
+      <Card className="cursor-pointer overflow-hidden transition-colors hover:border-blue-300">
+        {post.coverImageUrl && (
+          <img
+            src={post.coverImageUrl}
+            alt=""
+            loading="lazy"
+            className="h-40 w-full object-cover"
+          />
+        )}
         <CardContent className="p-5">
           <h3 className="mb-1 text-base font-medium text-blue-950">{post.title}</h3>
           <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">{post.excerpt}</p>

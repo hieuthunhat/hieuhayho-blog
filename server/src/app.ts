@@ -3,15 +3,17 @@ import Router from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import { errorHandler } from './middleware/error-handler.js';
-import authRouter from './routes/auth.js';
-import postsRouter from './routes/posts.js';
-import uploadsRouter from './routes/uploads.js';
-import contactRouter from './routes/contact.js';
+import { requestLogger } from './middleware/request-logger.js';
+import authRouter from './routes/auth.routes.js';
+import postsRouter from './routes/posts.routes.js';
+import uploadsRouter from './routes/uploads.routes.js';
+import contactRouter from './routes/contact.routes.js';
 
 export function buildApp(): Koa {
   const app = new Koa();
   app.keys = [process.env.JWT_SECRET ?? 'dev-key'];
 
+  app.use(requestLogger);
   app.use(errorHandler);
   app.use(
     cors({

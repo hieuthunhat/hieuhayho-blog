@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -12,13 +14,24 @@ function init() {
     return;
   }
 
-  // Production path — service account JSON in env.
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
-  if (!raw) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON is required when not using the emulator');
+  // Production path — file first, then JSON-in-env fallback.
+  const filePath = process.env.FIREBASE_SERVICE_ACCOUNT_FILE;
+  if (filePath) {
+    const absolute = resolve(filePath);
+    const credentials = JSON.parse(readFileSync(absolute, 'utf8'));
+    initializeApp({ credential: cert(credentials) });
+    return;
   }
-  const credentials = JSON.parse(raw);
-  initializeApp({ credential: cert(credentials) });
+
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  if (raw) {
+    initializeApp({ credential: cert(JSON.parse(raw)) });
+    return;
+  }
+
+  throw new Error(
+    'Set FIREBASE_SERVICE_ACCOUNT_FILE (path to JSON) or FIREBASE_SERVICE_ACCOUNT_JSON (inline JSON), or FIRESTORE_EMULATOR_HOST for emulator.'
+  );
 }
 
 init();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import slugify from 'slugify';
 import MDEditor from '@uiw/react-md-editor';
@@ -28,6 +28,25 @@ export default function PostEditor(props: Props) {
   const [status, setStatus] = useState<PostStatus>(seed?.status ?? 'draft');
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(seed?.coverImageUrl ?? null);
   const [submitting, setSubmitting] = useState(false);
+  const editorWrapRef = useRef<HTMLDivElement>(null);
+
+  const insertImageMarkdown = (url: string) => {
+    const md = `![](${url})`;
+    const ta = editorWrapRef.current?.querySelector('textarea');
+    if (!ta) {
+      setContent((c) => (c ? `${c}\n\n${md}\n` : `${md}\n`));
+      return;
+    }
+    const start = ta.selectionStart ?? content.length;
+    const end = ta.selectionEnd ?? content.length;
+    const next = content.slice(0, start) + md + content.slice(end);
+    setContent(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      const pos = start + md.length;
+      ta.setSelectionRange(pos, pos);
+    });
+  };
 
   // auto-derive slug from title until the slug field is touched
   useEffect(() => {
@@ -119,7 +138,15 @@ export default function PostEditor(props: Props) {
 
       <Card className="mb-4">
         <CardContent className="p-4" data-color-mode="light">
-          <MDEditor value={content} onChange={(v) => setContent(v ?? '')} height={420} preview="edit" />
+          <div className="mb-2 flex justify-end">
+            <ImageUploader
+              label="insert image"
+              onUploaded={(u) => insertImageMarkdown(u)}
+            />
+          </div>
+          <div ref={editorWrapRef}>
+            <MDEditor value={content} onChange={(v) => setContent(v ?? '')} height={420} preview="edit" />
+          </div>
         </CardContent>
       </Card>
 

@@ -10,7 +10,12 @@ export async function errorHandler(ctx: Context, next: Next) {
       ctx.body = { message: 'File too large' };
       return;
     }
-    ctx.status = e.status ?? 500;
+    const status = e.status ?? 500;
+    if (status >= 500) {
+      // eslint-disable-next-line no-console
+      console.error(`[error] ${ctx.method} ${ctx.url}`, err);
+    }
+    ctx.status = status;
     ctx.body = { message: e.message ?? 'Internal error' };
   }
 }

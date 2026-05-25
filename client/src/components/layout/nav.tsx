@@ -16,38 +16,47 @@ export default function Nav() {
     : baseLinks;
 
   return (
-    <nav className="mx-auto mb-12 flex max-w-5xl items-center justify-between px-8 pt-8">
-      <Link to="/" className="flex items-center gap-2.5">
-        <Avatar className="h-8 w-8 rounded-md">
-          <AvatarFallback className="rounded-md bg-blue-700 text-sm font-medium text-white">
-            H
-          </AvatarFallback>
-        </Avatar>
-        <span className="text-sm font-medium text-blue-950">hieu.dev</span>
-      </Link>
+    <nav className="sticky top-0 z-40 mb-12 border-b border-blue-100 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
+        <Link to="/" className="flex items-center gap-2.5">
+          <Avatar className="h-8 w-8 rounded-md">
+            <AvatarFallback className="rounded-md bg-blue-700 text-sm font-medium text-white">
+              H
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-sm font-semibold text-blue-950">hieu.dev</span>
+        </Link>
 
-      <ul className="flex gap-6 text-sm text-blue-900">
-        {links.map((l) => {
-          const isAnchor = l.to.includes('#');
-          if (isAnchor) {
+        <ul className="flex gap-6 text-sm font-medium text-blue-950">
+          {links.map((l) => {
+            const isAnchor = l.to.includes('#');
+            if (isAnchor) {
+              return (
+                <li key={l.label}>
+                  <a href={l.to} className="text-blue-900/80 transition-colors hover:text-blue-700">
+                    {l.label}
+                  </a>
+                </li>
+              );
+            }
             return (
               <li key={l.label}>
-                <a href={l.to} className="hover:underline">{l.label}</a>
+                <NavLink
+                  to={l.to}
+                  className={({ isActive }) =>
+                    cn(
+                      'text-blue-900/80 transition-colors hover:text-blue-700',
+                      isActive && 'font-semibold text-blue-700'
+                    )
+                  }
+                >
+                  {l.label}
+                </NavLink>
               </li>
             );
-          }
-          return (
-            <li key={l.label}>
-              <NavLink
-                to={l.to}
-                className={({ isActive }) => cn('hover:underline', isActive && 'underline')}
-              >
-                {l.label}
-              </NavLink>
-            </li>
-          );
-        })}
-      </ul>
+          })}
+        </ul>
+      </div>
     </nav>
   );
 }

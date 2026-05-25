@@ -36,7 +36,7 @@ export default function Blogs() {
       </div>
 
       {state.status === 'loading' && (
-        <div data-testid="blogs-loading" className="flex flex-col gap-3">
+        <div data-testid="blogs-loading" className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map((i) => (
             <Card key={i}>
               <CardContent className="p-5">
@@ -71,7 +71,7 @@ export default function Blogs() {
       )}
 
       {state.status === 'ok' && state.posts.length > 0 && (
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {state.posts.map((p) => (
             <PostCard key={p.slug} post={p} />
           ))}

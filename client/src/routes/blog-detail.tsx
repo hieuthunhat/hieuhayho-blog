@@ -75,6 +75,14 @@ export default function BlogDetail() {
 
           {state.status === 'ok' && (
             <>
+              {state.post.coverImageUrl && (
+                <img
+                  src={state.post.coverImageUrl}
+                  alt=""
+                  loading="lazy"
+                  className="mb-6 -mt-2 h-64 w-full rounded-md object-cover"
+                />
+              )}
               <h1 className="text-3xl font-medium text-blue-950">{state.post.title}</h1>
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 <PostMeta post={state.post} />
@@ -87,7 +95,7 @@ export default function BlogDetail() {
                 </div>
               </div>
               <Separator className="my-6" />
-              <div className="prose prose-sm prose-blue max-w-none prose-headings:text-blue-950 prose-a:text-blue-700">
+              <div className="prose prose-sm prose-blue mx-auto max-w-3xl prose-headings:text-blue-950 prose-a:text-blue-700">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {state.post.content}
                 </ReactMarkdown>

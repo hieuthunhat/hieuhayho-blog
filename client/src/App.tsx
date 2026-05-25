@@ -18,7 +18,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Nav />
-        <main className="mx-auto max-w-5xl px-8 pb-16">
+        <main className="mx-auto max-w-7xl px-8 pb-16 pt-4">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/blogs" element={<Blogs />} />

@@ -4,6 +4,13 @@ node_modules
 server/.env
 server/.env.local
 server/dist
+server/secrets/
 
 # emulator logs
 *.log
+
+# emulator persisted data (Firestore --import/--export-on-exit)
+emulator-data/
+
+# claude code local state
+.claude/
