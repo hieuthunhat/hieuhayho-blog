@@ -3,7 +3,12 @@
   "buildCommand": "npm run build --workspace=client",
   "outputDirectory": "client/dist",
   "framework": null,
+  "functions": {
+    "api/**/*.ts": {
+      "includeFiles": "server/**"
+    }
+  },
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
