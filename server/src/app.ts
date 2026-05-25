@@ -15,12 +15,14 @@ export function buildApp(): Koa {
 
   app.use(requestLogger);
   app.use(errorHandler);
-  app.use(
-    cors({
-      origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
-      credentials: true,
-    })
-  );
+  if (process.env.CORS_ORIGIN) {
+    app.use(
+      cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+      })
+    );
+  }
   app.use(bodyParser());
 
   const root = new Router();

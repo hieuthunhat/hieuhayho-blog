@@ -8,8 +8,7 @@ import type {
 
 const BASE = import.meta.env.VITE_API_BASE?.trim() ?? '';
 
-if (!BASE) {
-  // Surface this loudly during development so we never accidentally hit the same-origin path.
+if (!BASE && import.meta.env.DEV) {
   // eslint-disable-next-line no-console
   console.warn('VITE_API_BASE is not set; API calls will go to same origin.');
 }
